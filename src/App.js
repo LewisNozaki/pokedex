@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import ReactDOM from 'react-dom';
 import PokemonList from "./PokemonList";
 import axios from "axios";
+import Pagination from "./Pagination";
 
 function App() {
   const [pokemon, setPokemon] = useState([]);
@@ -21,7 +21,7 @@ function App() {
     }).then(res => {
       // once it is finished rendering, set the loading message state to false.
       setLoading(false);
-      
+
       // set the various states.
       setNextPageUrl(res.data.next);
       setPrevPageUrl(res.data.previous);
@@ -31,11 +31,22 @@ function App() {
     return () => cancel();
   }, [currentPageUrl]);
 
+  // Set previous and next page state
+  const goToNextPage = () => setCurrentPageUrl(nextPageUrl);
+
+  const goToPreviousPage = () => setCurrentPageUrl(prevPageUrl);
+
   // If loading is set to true and axios is getting the data, display the loading message or animation.
   if (loading) return "loading...";
 
   return (
-    <PokemonList pokemon={pokemon}/>
+    <>
+      <PokemonList pokemon={pokemon}/>
+      <Pagination 
+        goToNextPage={goToNextPage}
+        goToPreviousPage={goToPreviousPage}
+      />
+    </>
   );
 }
 
