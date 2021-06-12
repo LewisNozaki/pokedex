@@ -27,7 +27,7 @@ function App() {
       setPrevPageUrl(res.data.previous);
       setPokemon(res.data.results.map(p => p.name));
     });
-
+    
     return () => cancel();
   }, [currentPageUrl]);
 
@@ -43,8 +43,8 @@ function App() {
     <>
       <PokemonList pokemon={pokemon}/>
       <Pagination 
-        goToNextPage={goToNextPage}
-        goToPreviousPage={goToPreviousPage}
+        goToNextPage={nextPageUrl ? goToNextPage : null}
+        goToPreviousPage={prevPageUrl ? goToPreviousPage : null}
       />
     </>
   );
