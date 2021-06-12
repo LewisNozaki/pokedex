@@ -11,12 +11,28 @@ function App() {
   const [loading, setLoading] = useState(true)
   
   useEffect(() => {
-    axios.get(currentPageUrl).then(res => {
+    // sets the loading message state to true so that it eenders.
+    setLoading(true);
+
+    let cancel;
+
+    axios.get(currentPageUrl, {
+      cancelToken:  new axios.CancelToken(c => cancel = c)
+    }).then(res => {
+      // once it is finished rendering, set the loading message state to false.
+      setLoading(false);
+      
+      // set the various states.
       setNextPageUrl(res.data.next);
       setPrevPageUrl(res.data.previous);
       setPokemon(res.data.results.map(p => p.name));
     });
+
+    return () => cancel();
   }, [currentPageUrl]);
+
+  // If loading is set to true and axios is getting the data, display the loading message or animation.
+  if (loading) return "loading...";
 
   return (
     <PokemonList pokemon={pokemon}/>
